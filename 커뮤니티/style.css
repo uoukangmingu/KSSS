@@ -1,0 +1,195 @@
+﻿body {
+font-family: sans-serif;
+max-width: 600px;
+margin: 0 auto;
+padding: 1rem;
+}
+#body {
+  background-image: url('Frame 33.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+#write-post-btn {
+  width: 50%;
+  height: 50%;
+  max-width: 200px; /* 최대 너비 200px */
+  display: block;
+  margin-bottom: 10px;
+}
+
+.link-btn {
+text-decoration: none;
+color: #000; / 기본 상태 - 검정색 */
+transition: color 0.1s;
+}
+
+.link-btn:link,
+.link-btn:visited {
+color: #000; /* 기본 상태, 방문 후 상태 - 검정색 */
+}
+
+.link-btn:hover {
+color: blue; /* 마우스 호버 시 - 파란색 */
+}
+
+.link-btn:active {
+color: #000; /* 클릭 상태 - 검정색 */
+}
+
+#post-list {
+margin-bottom: 1rem;
+}
+
+#post-list-container {
+background-color: white;
+border: 1px solid #ccc;
+padding: 10px;
+}
+
+.post {
+margin-bottom: 20px;
+padding: 10px;
+background-color: white;
+border: 1px solid #ccc;
+border-radius: 5px;
+}
+
+.post-header {
+font-weight: bold;
+}
+
+/* CSS 파일에 추가 */
+#post-form {
+  display: flex;
+  align-items: center;
+}
+
+#post-form > * {
+  margin-right: 10px;
+}
+
+#logout-button {
+  margin-left: auto; /* 로그아웃 버튼을 오른쪽 끝에 배치 */
+}
+
+
+#post-title, #post-content {
+width: 100%;
+margin-bottom: 10px;
+}
+
+.post-content {
+word-break: break-all;
+white-space: pre-wrap;
+}
+
+.comment {
+background-color: white;
+border: 1px solid #ccc;
+padding: 10px;
+margin-bottom: 10px;
+}
+
+.comment-author {
+font-weight: bold;
+}
+
+.comment-content {
+margin-top: 5px;
+}
+
+.comments {
+max-height: 200px;
+overflow-y: auto;
+overflow-x: hidden;
+background-color: white;
+border: 1px solid #ccc;
+padding: 10px;
+}
+
+.homeBtn {
+  width: 10vw;
+  height: auto;
+  max-width: 200px;
+}
+.homebtn {
+    display: block;
+    position: absolute;
+    top: 87%;
+    left: 74%;
+    transform: translate(-200%, -200%);
+    width: 0.01%;
+    height: 0.01%;
+    background: rgba(255, 255, 255, 0);
+    cursor: pointer;
+    border: 2px solid transparent;
+    z-index: 2;
+}
+
+@keyframes flickerAnimation {
+0%   { opacity: 1; }
+50%  { opacity: 0.9; }
+100% { opacity: 1; }
+}
+
+@keyframes shakeAnimation {
+0% { transform: translate(1px, 1px) rotate(0deg); }
+10% { transform: translate(-0.5px, -1px) rotate(-0.25deg); }
+20% { transform: translate(-1.5px, 0px) rotate(0.25deg); }
+30% { transform: translate(1.5px, 1px) rotate(0deg); }
+40% { transform: translate(0.5px, -0.5px) rotate(0.25deg); }
+50% { transform: translate(-0.5px, 1px) rotate(-0.25deg); }
+60% { transform: translate(-1.5px, 0.5px) rotate(0deg); }
+70% { transform: translate(1.5px, 0.5px) rotate(-0.25deg); }
+80% { transform: translate(-0.5px, -0.5px) rotate(0.25deg); }
+90% { transform: translate(0.5px, 1px) rotate(0deg); }
+100% { transform: translate(0.5px, -1px) rotate(-0.25deg); }
+}
+
+body {
+transition: opacity 0.5s ease-in-out;
+background-color: #000;
+overflow: hidden;
+}
+body.page-transition {
+  opacity: 0;
+}
+@keyframes scanlines {
+0% {
+background-position: 0 0;
+}
+100% {
+background-position: 0 -100vh;
+}
+}
+
+body::after {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: repeating-linear-gradient(
+transparent,
+transparent 10px,
+rgba(255, 255, 255, 0.05) 10px,
+rgba(255, 255, 255, 0.05) 20px
+);
+animation: scanlines 20s ease-in-out infinite;
+pointer-events: none;
+}
+
+.screen {
+transition: opacity 0.3s ease-in-out;
+}
+
+*:hover > .screen {
+opacity: 0.3;
+}
+
+.shake {
+animation: shakeAnimation 0.3s 1;
+}
