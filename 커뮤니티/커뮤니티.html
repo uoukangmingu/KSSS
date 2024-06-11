@@ -1,46 +1,51 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>커뮤니티</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body id="body">
+<body>
+  <div class="container">
+    <canvas id="glowCanvas"></canvas>
+      <div id="app">
+         <img id="write-post-btn" src="글쓰기.png" alt="글쓰기" style="cursor: pointer;">
+         <div id="login-form" style="display: none;">
+           <h3>로그인</h3>
+           <input type="text" id="login-email" placeholder="이메일">
+           <input type="password" id="login-password" placeholder="비밀번호">
+           <button id="login-btn">로그인</button>
+              <div style="display: flex; justify-content: center; margin-top: 10px; align-items: center;">
+                 <a href="#" id="signup-link" class="link-btn">회원가입하기</a>
+                 <div style="margin: 0 10px;"></div>
+                 <a href="#" id="anonymous-write" class="link-btn">익명으로 글쓰기</a>
+              </div>
+         </div>
 
-  <div id="app">
-    <img id="write-post-btn" src="글쓰기.png" alt="글쓰기" style="cursor: pointer;">
-    <div id="login-form" style="display: none;">
-      <h2>로그인</h2>
-      <input type="text" id="login-email" placeholder="이메일">
-      <input type="password" id="login-password" placeholder="비밀번호">
-      <button id="login-btn">로그인</button>
-      <div style="display: flex; justify-content: center; margin-top: 10px; align-items: center;">
-        <a href="#" id="signup-link" class="link-btn">회원가입하기</a>
-        <div style="margin: 0 10px;"></div>
-        <a href="#" id="anonymous-write" class="link-btn">익명으로 글쓰기</a>
-      </div>
-    </div>
-
-    <div id="signup-form" style="display: none;">
-      <h2>회원가입</h2>
-      <input type="text" id="signup-name" placeholder="이름">
-      <input type="text" id="signup-email" placeholder="이메일">
-      <input type="password" id="signup-password" placeholder="비밀번호">
-      <button id="signup-btn">회원가입</button>
-    </div>
+        <div id="signup-form" style="display: none;">
+           <h3>회원가입</h3>
+           <input type="text" id="signup-name" placeholder="닉네임">
+           <input type="text" id="signup-email" placeholder="이메일">
+           <input type="password" id="signup-password" placeholder="비밀번호">
+           <button id="signup-btn">회원가입</button>
+           <button id="signup-back-btn">뒤로가기</button>
+        </div>
     
-    <div id="post-list-container" style="max-height: 500px; overflow-y: auto;">
-      <div id="post-list"></div>
-    </div>
+        <div id="post-list-container" style="max-height: 500px; overflow-y: auto;">
+           <div id="post-list"></div>
+        </div>
     
-    <div id="post-form" style="display: none;">
-      <input type="text" id="post-title" placeholder="제목을 입력하세요">
-      <textarea id="post-content" placeholder="내용을 입력하세요"></textarea>
-      <button id="post-submit">작성</button>
-    </div>
-        <a href="../index.html" class="homebtn"><img src="homebtn.png" alt="홈 버튼" class="homeBtn"></a>
+        <div id="post-form" style="display: none;">
+           <input type="text" id="post-title" placeholder="제목을 입력하세요">
+           <textarea id="post-content" placeholder="내용을 입력하세요"></textarea>
+           <button id="post-submit">작성</button>
+        </div>
+           <a href="../index.html" class="homebtn"><img src="homebtn.png" alt="홈 버튼" class="homeBtn"></a>
+     </div>
   </div>
 <script src="app.js"></script>
+<script src="init.js"></script>
 <script src="script2.js"></script>
 
 </body>
