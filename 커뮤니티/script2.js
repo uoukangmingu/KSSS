@@ -3,6 +3,23 @@ const ctx = canvas.getContext('2d');
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+function drawGlow() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+  const maxRadius = Math.sqrt(canvas.width ** 2 + canvas.height ** 2) / 2;
+
+  const radius = maxRadius * (0.6 + 0.4 * Math.random());
+const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+gradient.addColorStop(0, 'rgba(7, 0, 108, 0.05)'); // 더 연한 파란색
+gradient.addColorStop(0.5, 'rgba(7, 0, 108, 0.02)'); // 더 연한 파란색
+gradient.addColorStop(1, 'rgba(7, 0, 108, 0)');
+
+
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
 
 function animate() {
   drawGlow();
@@ -10,10 +27,6 @@ function animate() {
 }
 
 animate();
-
-
-
-
 const container = document.querySelector('.container');
 
 function flickerAnimation() {
