@@ -1,22 +1,43 @@
-﻿body {
-font-family: sans-serif;
-max-width: 600px;
-margin: 0 auto;
-padding: 1rem;
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
 }
-#body {
-  background-image: url('Frame 33.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+
+.container {
+    width: 100%;
+    height: 100%;
+    background-image: url('Frame 33.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+    animation: flickerAnimation 0.15s infinite;
 }
-#write-post-btn {
-  width: 50%;
-  height: 50%;
-  max-width: 200px; /* 최대 너비 200px */
+#login-form, #signup-form {
   display: block;
-  margin-bottom: 10px;
+  position: absolute;
+  top: 15.5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #FA0519;
+  padding: 10px;
+  border-radius: 15px;
+  box-shadow: 0 0 25px #400101;
+  z-index: 2; /* 다른 요소들 위에 렌더링되도록 */
+}
+
+#write-post-btn {
+    display: block;
+    position: absolute;
+    top: 16%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 25%;
+    height: 25%;
+    cursor: pointer;
+  z-index: 1;
 }
 
 .link-btn {
@@ -27,15 +48,15 @@ transition: color 0.1s;
 
 .link-btn:link,
 .link-btn:visited {
-color: #000; /* 기본 상태, 방문 후 상태 - 검정색 */
+color: black;
 }
 
 .link-btn:hover {
-color: blue; /* 마우스 호버 시 - 파란색 */
+color: blue;
 }
 
 .link-btn:active {
-color: #000; /* 클릭 상태 - 검정색 */
+color: black;
 }
 
 #post-list {
@@ -43,70 +64,106 @@ margin-bottom: 1rem;
 }
 
 #post-list-container {
-background-color: white;
-border: 1px solid #ccc;
-padding: 10px;
+    display: block;
+    position: absolute;
+    top: 52.5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: 40%;
+    background: #FA0519;
+    cursor: pointer;
+    border: 20px solid #FA0519;
+    box-shadow: 0 0 25px #400101;
+    overflow-y: auto;
+    border-radius: 15px;
 }
+
 
 .post {
 margin-bottom: 20px;
 padding: 10px;
-background-color: white;
-border: 1px solid #ccc;
-border-radius: 5px;
+background-color: #04BFBF;
+border: 5px solid #2E2E2E;
+border-radius: 15px;
 }
 
 .post-header {
 font-weight: bold;
+border-radius: 15px;
 }
 
-/* CSS 파일에 추가 */
 #post-form {
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  max-width: 600px;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 100;
 }
 
 #post-form > * {
-  margin-right: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
 }
 
 #logout-button {
-  margin-left: auto; /* 로그아웃 버튼을 오른쪽 끝에 배치 */
+  align-self: flex-end;
+  z-index: 101;
 }
 
-
-#post-title, #post-content {
-width: 100%;
-margin-bottom: 10px;
+#post-title {
+  height: 40px;
+  font-size: 1.2rem;
+  padding: 0 10px;
+  margin-bottom: 10px;
 }
 
-.post-content {
-word-break: break-all;
-white-space: pre-wrap;
+#post-content {
+  height: 200px;
+  font-size: 1rem;
+  padding: 10px;
+  resize: none;
+  margin-bottom: 10px;
 }
+
 
 .comment {
 background-color: white;
-border: 1px solid #ccc;
+border: 3px solid #ffff00;
 padding: 10px;
 margin-bottom: 10px;
+border-radius: 15px;
 }
 
 .comment-author {
 font-weight: bold;
+border-radius: 15px;
 }
 
 .comment-content {
 margin-top: 5px;
+border-radius: 15px;
 }
 
 .comments {
 max-height: 200px;
 overflow-y: auto;
 overflow-x: hidden;
-background-color: white;
-border: 1px solid #ccc;
-padding: 10px;
+background-color: #050505;
+border: 3px solid #ffff00;
+padding: 5px;
+border-radius: 15px;
 }
 
 .homeBtn {
@@ -127,7 +184,12 @@ padding: 10px;
     border: 2px solid transparent;
     z-index: 2;
 }
-
+#glowCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
 @keyframes flickerAnimation {
 0%   { opacity: 1; }
 50%  { opacity: 0.9; }
@@ -192,4 +254,111 @@ opacity: 0.3;
 
 .shake {
 animation: shakeAnimation 0.3s 1;
+}
+.post {
+  background-color: #000000; /* 검정색 배경 */
+  border: 5px solid #ffff00;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  color: #ffff00; /* 노랑색 글자 */
+border-radius: 15px;
+}
+
+.post-title {
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-right: 10px;
+  color: #ffff00; /* 노랑색 제목 */
+}
+
+.post-author {
+  font-weight: 300;
+  text-align: right;
+  color: #ffff00; /* 노랑색 작성자 */
+}
+
+.post-content {
+  margin-top: 10px;
+  color: #ffff00; /* 노랑색 내용 */
+}
+
+.comment {
+  background-color: #421C1D;
+  border-top: 5px solid #058A99;
+  padding-top: 5px;
+  margin-top: 5px;
+  color: #ffff00; /* 노랑색 댓글 */
+}
+
+.comment-author {
+  font-weight: bold;
+  color: #ffff00; /* 노랑색 댓글 작성자 */
+}
+
+.comment-content {
+  background-color: #421C1D; /* 노랑색 댓글 내용 */
+}
+#post-form button {
+  margin-bottom: 10px; /* 닫기 버튼과 제목 작성란 사이의 간격 */
+}
+.close-btn {
+  background-color: #FA494E;
+  color: #400101;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  background-color: #FE7F81;
+}
+
+/* 댓글 입력 폼 스타일 */
+.comment-form {
+  display: flex;
+  align-items: center;
+  margin-top: 20px; /* 상단 여백 추가 */
+}
+
+.comment-form input {
+  flex: 1;
+  padding: 10px; /* 패딩 증가 */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+  font-size: 16px; /* 글꼴 크기 증가 */
+}
+
+.comment-form button {
+  padding: 10px 20px; /* 패딩 증가 */
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px; /* 글꼴 크기 증가 */
+  transition: background-color 0.3s ease; /* 부드러운 배경색 변화 효과 */
+}
+
+.comment-form button:hover {
+  background-color: #45a049; /* 호버 시 배경색 변경 */
+}
+
+/* 삭제 버튼 스타일 */
+.delete-btn {
+  padding: 10px 20px; /* 패딩 증가 */
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px; /* 글꼴 크기 증가 */
+  transition: background-color 0.3s ease; /* 부드러운 배경색 변화 효과 */
+  margin-left: 20px; /* 왼쪽 여백 추가 */
+}
+
+.delete-btn:hover {
+  background-color: #e53935; /* 호버 시 배경색 변경 */
 }
