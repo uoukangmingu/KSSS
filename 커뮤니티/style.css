@@ -137,35 +137,6 @@ border-radius: 15px;
   margin-bottom: 10px;
 }
 
-
-.comment {
-background-color: white;
-border: 3px solid #ffff00;
-padding: 10px;
-margin-bottom: 10px;
-border-radius: 15px;
-}
-
-.comment-author {
-font-weight: bold;
-border-radius: 15px;
-}
-
-.comment-content {
-margin-top: 5px;
-border-radius: 15px;
-}
-
-.comments {
-max-height: 200px;
-overflow-y: auto;
-overflow-x: hidden;
-background-color: #050505;
-border: 3px solid #ffff00;
-padding: 5px;
-border-radius: 15px;
-}
-
 .homeBtn {
   width: 10vw;
   height: auto;
@@ -283,22 +254,6 @@ border-radius: 15px;
   color: #ffff00; /* 노랑색 내용 */
 }
 
-.comment {
-  background-color: #421C1D;
-  border-top: 5px solid #058A99;
-  padding-top: 5px;
-  margin-top: 5px;
-  color: #ffff00; /* 노랑색 댓글 */
-}
-
-.comment-author {
-  font-weight: bold;
-  color: #ffff00; /* 노랑색 댓글 작성자 */
-}
-
-.comment-content {
-  background-color: #421C1D; /* 노랑색 댓글 내용 */
-}
 #post-form button {
   margin-bottom: 10px; /* 닫기 버튼과 제목 작성란 사이의 간격 */
 }
@@ -315,40 +270,9 @@ border-radius: 15px;
   background-color: #FE7F81;
 }
 
-/* 댓글 입력 폼 스타일 */
-.comment-form {
-  display: flex;
-  align-items: center;
-  margin-top: 20px; /* 상단 여백 추가 */
-}
 
-.comment-form input {
-  flex: 1;
-  padding: 10px; /* 패딩 증가 */
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-right: 10px;
-  font-size: 16px; /* 글꼴 크기 증가 */
-}
-
-.comment-form button {
-  padding: 10px 20px; /* 패딩 증가 */
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px; /* 글꼴 크기 증가 */
-  transition: background-color 0.3s ease; /* 부드러운 배경색 변화 효과 */
-}
-
-.comment-form button:hover {
-  background-color: #45a049; /* 호버 시 배경색 변경 */
-}
-
-/* 삭제 버튼 스타일 */
 .delete-btn {
-  padding: 10px 20px; /* 패딩 증가 */
+  padding: 0px 20px; /* 패딩 증가 */
   background-color: #f44336;
   color: white;
   border: none;
@@ -356,7 +280,7 @@ border-radius: 15px;
   cursor: pointer;
   font-size: 16px; /* 글꼴 크기 증가 */
   transition: background-color 0.3s ease; /* 부드러운 배경색 변화 효과 */
-  margin-left: 20px; /* 왼쪽 여백 추가 */
+  margin: 10px; /* 왼쪽 여백 추가 */
 }
 
 .delete-btn:hover {
