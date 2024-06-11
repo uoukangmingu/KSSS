@@ -1,4 +1,4 @@
-﻿const postList = document.getElementById('post-list');
+const postList = document.getElementById('post-list');
 const postForm = document.getElementById('post-form');
 const postTitle = document.getElementById('post-title');
 const postContent = document.getElementById('post-content');
@@ -6,6 +6,7 @@ const postSubmit = document.getElementById('post-submit');
 
 const loginForm = document.getElementById('login-form');
 const signupForm = document.getElementById('signup-form');
+const signupBackBtn = document.getElementById('signup-back-btn');
 const loginEmail = document.getElementById('login-email');
 const loginPassword = document.getElementById('login-password');
 const loginBtn = document.getElementById('login-btn');
@@ -167,6 +168,10 @@ if (isLoggedIn) {
 renderPosts();
 
 loginBtn.addEventListener('click', () => {
+  if (loginEmail.value.trim() === '' || loginPassword.value.trim() === '') {
+    alert('이메일과 비밀번호를 입력해주세요.');
+    return;
+  }
   const user = users.find(u => u.email === loginEmail.value && u.password === loginPassword.value);
   if (user) {
     loginForm.style.display = 'none';
@@ -179,33 +184,56 @@ loginBtn.addEventListener('click', () => {
   }
 });
 
-loginBtn.addEventListener('click', () => {
-const user = users.find(u => u.email === loginEmail.value && u.password === loginPassword.value);
-if (user) {
-loginForm.style.display = 'none';
-logoutBtn.style.display = 'block';
-writePostBtn.style.display = 'none';
-nickname = user.name;
-isLoggedIn = true;
-postForm.style.display = 'block';
-renderPosts();
-} else {
-alert('이메일 또는 비밀번호가 일치하지 않습니다.');
-}
-});
-
 signupBtn.addEventListener('click', () => {
+  let isValid = true;
+
+  if (!signupName.value.trim()) {
+    alert('닉네임이 입력되지 않았습니다.');
+    isValid = false;
+  } else if (users.some(user => user.name === signupName.value.trim())) {
+    alert('이미 사용 중인 닉네임입니다. 다른 닉네임을 입력해주세요.');
+    isValid = false;
+  }
+
+  // 이메일 중복 체크
+  if (!signupEmail.value.trim()) {
+    alert('이메일이 입력되지 않았습니다.');
+    isValid = false;
+  } else if (users.some(user => user.email === signupEmail.value.trim())) {
+    alert('이미 가입된 이메일입니다. 로그인 화면으로 이동합니다.');
+    signupForm.style.display = 'none';
+    loginForm.style.display = 'block';
+    isValid = false;
+  }
+
+  // 비밀번호 입력 확인
+  if (!signupPassword.value.trim()) {
+    alert('비밀번호가 입력되지 않았습니다.');
+    isValid = false;
+  }
+
+if (isValid) {
 const newUser = {
-name: signupName.value,
-email: signupEmail.value,
-password: signupPassword.value
+name: signupName.value.trim(),
+email: signupEmail.value.trim(),
+password: signupPassword.value.trim()
 };
 users.push(newUser);
 localStorage.setItem('users', JSON.stringify(users));
 alert('회원가입이 완료되었습니다.');
 signupForm.style.display = 'none';
 loginForm.style.display = 'block';
+}
 });
+
+signupBackBtn.addEventListener('click', () => {
+  signupName.value = '';
+  signupEmail.value = '';
+  signupPassword.value = '';
+  signupForm.style.display = 'none';
+  loginForm.style.display = 'block';
+});
+
 
 signupLink.addEventListener('click', () => {
 signupForm.style.display = 'block';
@@ -222,13 +250,30 @@ writePostBtn.style.display = 'none';
 }
 });
 
+
 anonymousWrite.addEventListener('click', () => {
-postForm.style.display = 'block';
-loginForm.style.display = 'none';
-writePostBtn.style.display = 'none';
-nickname = '익명';
-isLoggedIn = false;
+  postForm.style.display = 'block';
+  loginForm.style.display = 'none';
+  writePostBtn.style.display = 'none';
+
+  // 닫기 버튼이 이미 존재하는지 확인
+  const existingCloseButton = postForm.querySelector('button');
+  if (!existingCloseButton) {
+    // 닫기 버튼이 없다면 새로 생성
+    const closeButton = document.createElement('button');
+    closeButton.textContent = '닫기';
+    closeButton.addEventListener('click', () => {
+      postForm.style.display = 'none';
+      writePostBtn.style.display = 'block';
+    });
+    closeButton.style.marginTop = '10px';
+    postForm.appendChild(closeButton);
+  }
+
+  nickname = '익명';
+  isLoggedIn = false;
 });
+
 
 postSubmit.addEventListener('click', () => {
 if (postTitle.value.trim() !== '' && postContent.value.trim() !== '') {
@@ -242,9 +287,16 @@ posts.unshift(newPost);
 postTitle.value = '';
 postContent.value = '';
 renderPosts();
-saveData();
 }
 });
+const closeButton = document.createElement('button');
+closeButton.textContent = '닫기';
+closeButton.classList.add('close-btn');
+closeButton.addEventListener('click', () => {
+  postForm.style.display = 'none';
+  writePostBtn.style.display = 'block';
+});
+postForm.appendChild(closeButton);
 
 function saveData() {
 localStorage.setItem('posts', JSON.stringify(posts));
