@@ -18,12 +18,29 @@ const signupLink = document.getElementById('signup-link');
 const writePostBtn = document.getElementById('write-post-btn');
 const anonymousWrite = document.getElementById('anonymous-write');
 
-
 let posts = JSON.parse(localStorage.getItem('posts')) || [];
 let users = JSON.parse(localStorage.getItem('users')) || [];
 let nickname = '익명';
 let isLoggedIn = false;
 let anonymousCount = 1;
+
+postSubmit.addEventListener('click', () => {
+  if (postTitle.value.trim() !== '' && postContent.value.trim() !== '') {
+    const newPost = {
+      title: postTitle.value.trim(),
+      content: postContent.value.trim(),
+      author: isLoggedIn ? nickname : `익명${anonymousCount}`,
+    };
+    posts.unshift(newPost);
+    if (!isLoggedIn) {
+      anonymousCount++;
+    }
+    postTitle.value = '';
+    postContent.value = '';
+    renderPosts();
+    saveData();
+  }
+});
 
 function renderPosts() {
 postList.innerHTML = '';
@@ -63,77 +80,27 @@ contentElement.className = 'post-content';
 contentElement.style.marginTop = '10px';
 contentElement.textContent = post.content;
 
-const commentsElement = document.createElement('div');
-commentsElement.className = 'comments';
-if (post.comments.length > 0) {
-let anonymousCommentCount = 1;
-post.comments.forEach(comment => {
-const commentElement = document.createElement('div');
-commentElement.className = 'comment';
-
-
-let commentAuthor = comment.author;
-if (commentAuthor === '익명') {
-  commentAuthor = `익명${anonymousCommentCount}`;
-  anonymousCommentCount++;
-}
-
-const commentAuthorElement = document.createElement('div');
-commentAuthorElement.className = 'comment-author';
-commentAuthorElement.textContent = commentAuthor + ':';
-
-const commentContentElement = document.createElement('div');
-commentContentElement.className = 'comment-content';
-commentContentElement.textContent = comment.content;
-
-commentElement.appendChild(commentAuthorElement);
-commentElement.appendChild(commentContentElement);
-commentsElement.appendChild(commentElement);
-});
-} else {
-commentsElement.style.display = 'none';
-}
-
-const commentFormElement = document.createElement('div');
-commentFormElement.className = 'comment-form';
-
-const commentInput = document.createElement('input');
-commentInput.placeholder = '댓글 입력...';
-
-const commentSubmit = document.createElement('button');
-commentSubmit.textContent = '댓글 작성';
-commentSubmit.addEventListener('click', () => {
-  if (commentInput.value.trim() !== '') {
-    post.comments.push({ author: nickname, content: commentInput.value.trim() });
-    commentInput.value = '';
+const deletePostBtn = document.createElement('button');
+deletePostBtn.textContent = '삭제';
+deletePostBtn.classList.add('delete-btn'); // CSS 클래스 추가
+deletePostBtn.style.marginLeft = '5px'; // 왼쪽 마진 20px 추가
+deletePostBtn.addEventListener('click', () => {
+  if (post.author === nickname) {
+    posts.splice(posts.length - index - 1, 1); // 해당 인덱스의 글 삭제
     renderPosts();
+    saveData();
+  } else {
+    alert('작성자만 삭제할 수 있습니다.');
   }
 });
 
-  const deletePostBtn = document.createElement('button');
-  deletePostBtn.textContent = '삭제';
-  deletePostBtn.addEventListener('click', () => {
-    if (post.author === nickname) {
-      posts.splice(posts.length - index - 1, 1); // 해당 인덱스의 글 삭제
-      renderPosts();
-      saveData();
-    } else {
-      alert('자신의 글만 삭제할 수 있습니다.');
-    }
-  });
   if (post.author === nickname) {
     postElement.appendChild(deletePostBtn);
   }
-  commentFormElement.appendChild(commentInput);
-  commentFormElement.appendChild(commentSubmit);
-
-
 headerElement.appendChild(titleElement);
 headerElement.appendChild(authorElement);
 postElement.appendChild(headerElement);
 postElement.appendChild(contentElement);
-postElement.appendChild(commentsElement);
-postElement.appendChild(commentFormElement);
 postElement.appendChild(deletePostBtn);
 postList.prepend(postElement);
 });
@@ -281,7 +248,6 @@ const newPost = {
 title: postTitle.value.trim(),
 content: postContent.value.trim(),
 author: nickname,
-comments: []
 };
 posts.unshift(newPost);
 postTitle.value = '';
