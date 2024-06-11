@@ -286,3 +286,20 @@ border-radius: 15px;
 .delete-btn:hover {
   background-color: #e53935; /* 호버 시 배경색 변경 */
 }
+
+.exit-button {
+    display: block;
+    position: absolute;
+    top: 26.45%;
+    left: 74.9%;
+    transform: translate(-50%, -50%);
+    width: 2%;
+    height: 3.5%;
+    background: rgba(255, 255, 255,0);
+    cursor: pointer;
+    border: 2px solid transparent;
+    z-index: 2;
+}
+.exit-button:hover {
+background: rgba(255, 0, 0, 0.3);
+}
