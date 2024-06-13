@@ -72,13 +72,29 @@ margin-bottom: 1rem;
     width: 50%;
     height: 40%;
     background: #FA0519;
-    cursor: pointer;
     border: 20px solid #FA0519;
     box-shadow: 0 0 25px #400101;
     overflow-y: auto;
+    overflow-x: hidden;
+    border-radius: 15px;
+    padding-right: 10px;
+}
+#post-list-container::-webkit-scrollbar {
+    width: 20px;
+}
+
+#post-list-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
+}
+
+#post-list-container::-webkit-scrollbar-thumb {
+    background-color: #0F168C;
     border-radius: 15px;
 }
 
+#post-list-container::-webkit-scrollbar-thumb:hover {
+    background-color: #07093A;
+}
 
 .post {
 margin-bottom: 20px;
@@ -86,6 +102,9 @@ padding: 10px;
 background-color: #04BFBF;
 border: 5px solid #2E2E2E;
 border-radius: 15px;
+word-wrap: break-word;
+overflow-wrap: break-word;
+white-space: normal;
 }
 
 .post-header {
@@ -130,11 +149,15 @@ border-radius: 15px;
 }
 
 #post-content {
+  display: flex;
   height: 200px;
   font-size: 1rem;
   padding: 10px;
   resize: none;
   margin-bottom: 10px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .homeBtn {
