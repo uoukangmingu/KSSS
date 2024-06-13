@@ -68,13 +68,129 @@ window.addEventListener('resize', adjustContainerHeight);
 
 document.addEventListener('keydown', function(event) {
   if (event.key === 'Escape') {
-    goToPreviousPage();
+    showInitialScreenMessage();
   }
 });
 
-function goToPreviousPage() {
-  document.body.classList.add('page-transition');
+function showInitialScreenMessage() {
+  const messageContainer = document.createElement('div');
+  messageContainer.style.position = 'fixed';
+  messageContainer.style.top = '50%';
+  messageContainer.style.left = '50%';
+  messageContainer.style.transform = 'translate(-50%, -50%)';
+  messageContainer.style.fontSize = '5rem';
+  messageContainer.style.color = 'red';
+  messageContainer.style.textShadow = '0 0 20px black';
+  messageContainer.style.zIndex = '9999';
+  messageContainer.textContent = '최초 화면입니다';
+
+  // 무서운 효과 추가
+  messageContainer.style.animation = 'initialScreenAnimation 2s infinite';
+
+  document.body.appendChild(messageContainer);
+
   setTimeout(function() {
-    window.history.back();
-  }, 500); // 0.5초 후에 이전 페이지로 이동
+    document.body.removeChild(messageContainer);
+  }, 2000); // 5초 후에 메시지 제거
 }
+function getRandomPosition() {
+  const x = Math.random() * (window.innerWidth - 200);
+  const y = Math.random() * (window.innerHeight - 200);
+  return { x, y };
+}
+
+function getRandomSize() {
+  const width = Math.random() * 300 + 100; // 100px ~ 400px
+  const height = width * 1.25; // 가로세로비 4:3
+  return { width, height };
+}
+
+function showHandEffect() {
+  const handContainer = document.getElementById('hand-container');
+  const handImage = document.getElementById('hand-image');
+
+  const { x, y } = getRandomPosition();
+  const { width, height } = getRandomSize();
+
+  handContainer.style.display = 'block';
+  handContainer.style.opacity = '1'; // 불투명 상태로 시작
+  handContainer.style.left = `${x}px`; 
+  handContainer.style.top = `${y}px`;
+  handImage.style.width = `${width}px`;
+  handImage.style.height = `${height}px`;
+
+  setTimeout(function() {
+    handContainer.style.opacity = '0'; // 서서히 사라짐
+    setTimeout(function() {
+      handContainer.style.display = 'none';
+const randomDelay = Math.random() * 2000 + 8000; // 8초 ~ 10초 사이 랜덤
+      setTimeout(function() {
+        showHandEffect();
+      }, randomDelay);
+    }, 1000);
+  }, 2000);
+}
+
+ setTimeout(function() {
+  showHandEffect();
+}, 1000);
+const audioFile1 = ['./오디오/공포.mp3', './오디오/영혼.mp3', './오디오/으스스.mp3'];
+const audioFile2 = ['./오디오/비명.mp3'];
+let playedAudioIndex1 = -1;
+let playedAudioIndex2 = -1;
+
+function playRandomAudio1() {
+  let randomIndex;
+  do {
+    randomIndex = Math.floor(Math.random() * audioFile1.length);
+  } while (randomIndex === playedAudioIndex1);
+
+  const randomAudioFile = audioFile1[randomIndex];
+  playedAudioIndex1 = randomIndex;
+
+  const audio = new Audio(randomAudioFile);
+  audio.volume = 0.5;
+  audio.play();
+}
+
+function playRandomAudio2() {
+  let randomIndex;
+  do {
+    randomIndex = Math.floor(Math.random() * audioFile2.length);
+  } while (randomIndex === playedAudioIndex2);
+
+  const randomAudioFile = audioFile2[randomIndex];
+  playedAudioIndex2 = randomIndex;
+
+  const audio = new Audio(randomAudioFile);
+  audio.volume = 0.5;
+  audio.play();
+}
+
+setInterval(playRandomAudio1, 10000);
+setInterval(playRandomAudio2, 20000);
+
+
+function initAudio() {
+  audio = new Audio('./오디오/tv소리.mp3');
+  audio.volume = 0.5;
+  audio.loop = true;
+  audio.addEventListener('canplaythrough', playAudio);
+}
+
+function playAudio() {
+  audio.play()
+    .catch(err => {
+      // 자동재생이 차단된 경우 처리
+      console.log('재생 차단:', err);
+    });
+}
+
+document.addEventListener('click', function() {
+  // 사용자 상호작용 이후에 오디오 재생 시도
+  if (audio && audio.paused) {
+    audio.play();
+  }
+}, { once: true });
+
+initAudio();
