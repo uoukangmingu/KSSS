@@ -134,3 +134,63 @@ const randomDelay = Math.random() * 2000 + 8000; // 8초 ~ 10초 사이 랜덤
  setTimeout(function() {
   showHandEffect();
 }, 1000);
+const audioFile1 = ['./오디오/공포.mp3', './오디오/영혼.mp3', './오디오/으스스.mp3'];
+const audioFile2 = ['./오디오/비명.mp3'];
+let playedAudioIndex1 = -1;
+let playedAudioIndex2 = -1;
+
+function playRandomAudio1() {
+  let randomIndex;
+  do {
+    randomIndex = Math.floor(Math.random() * audioFile1.length);
+  } while (randomIndex === playedAudioIndex1);
+
+  const randomAudioFile = audioFile1[randomIndex];
+  playedAudioIndex1 = randomIndex;
+
+  const audio = new Audio(randomAudioFile);
+  audio.volume = 0.5;
+  audio.play();
+}
+
+function playRandomAudio2() {
+  let randomIndex;
+  do {
+    randomIndex = Math.floor(Math.random() * audioFile2.length);
+  } while (randomIndex === playedAudioIndex2);
+
+  const randomAudioFile = audioFile2[randomIndex];
+  playedAudioIndex2 = randomIndex;
+
+  const audio = new Audio(randomAudioFile);
+  audio.volume = 0.5;
+  audio.play();
+}
+
+setInterval(playRandomAudio1, 10000);
+setInterval(playRandomAudio2, 20000);
+
+
+function initAudio() {
+  audio = new Audio('./오디오/tv소리.mp3');
+  audio.volume = 0.5;
+  audio.loop = true;
+  audio.addEventListener('canplaythrough', playAudio);
+}
+
+function playAudio() {
+  audio.play()
+    .catch(err => {
+      // 자동재생이 차단된 경우 처리
+      console.log('재생 차단:', err);
+    });
+}
+
+document.addEventListener('click', function() {
+  // 사용자 상호작용 이후에 오디오 재생 시도
+  if (audio && audio.paused) {
+    audio.play();
+  }
+}, { once: true });
+
+initAudio();
