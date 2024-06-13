@@ -78,8 +78,8 @@ function goToPreviousPage() {
     window.history.back();
   }, 500); // 0.5초 후에 이전 페이지로 이동
 }
-const audioFile1 = ['./오디오/공포.mp3', './오디오/영혼.mp3', './오디오/으스스.mp3'];
-const audioFile2 = ['./오디오/비명.mp3'];
+const audioFile1 = ['../오디오/공포.mp3', '../오디오/영혼.mp3', '../오디오/으스스.mp3'];
+const audioFile2 = ['../오디오/비명.mp3'];
 let playedAudioIndex1 = -1;
 let playedAudioIndex2 = -1;
 
@@ -112,11 +112,11 @@ function playRandomAudio2() {
 }
 
 setInterval(playRandomAudio1, 10000);
-setInterval(playRandomAudio2, 20000);
+setInterval(playRandomAudio2, 30000);
 
 
 function initAudio() {
-  audio = new Audio('./오디오/tv소리.mp3');
+  audio = new Audio('../오디오/tv소리.mp3');
   audio.volume = 0.5;
   audio.loop = true;
   audio.addEventListener('canplaythrough', playAudio);
