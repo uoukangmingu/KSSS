@@ -3,6 +3,7 @@ const ctx = canvas.getContext('2d');
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+
 function drawGlow() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -27,6 +28,10 @@ function animate() {
 }
 
 animate();
+
+
+
+
 const container = document.querySelector('.container');
 
 function flickerAnimation() {
@@ -73,10 +78,11 @@ function goToPreviousPage() {
     window.history.back();
   }, 500); // 0.5초 후에 이전 페이지로 이동
 }
+
 const audioFile1 = ['../오디오/공포.mp3', '../오디오/영혼.mp3', '../오디오/으스스.mp3'];
-
+const audioFile2 = ['../오디오/비명.mp3'];
 let playedAudioIndex1 = -1;
-
+let playedAudioIndex2 = -1;
 
 function playRandomAudio1() {
   let randomIndex;
@@ -92,8 +98,22 @@ function playRandomAudio1() {
   audio.play();
 }
 
-setInterval(playRandomAudio1, 10000);
+function playRandomAudio2() {
+  let randomIndex;
+  do {
+    randomIndex = Math.floor(Math.random() * audioFile2.length);
+  } while (randomIndex === playedAudioIndex2);
 
+  const randomAudioFile = audioFile2[randomIndex];
+  playedAudioIndex2 = randomIndex;
+
+  const audio = new Audio(randomAudioFile);
+  audio.volume = 0.5;
+  audio.play();
+}
+
+setInterval(playRandomAudio1, 10000);
+setInterval(playRandomAudio2, 30000);
 
 
 function initAudio() {
