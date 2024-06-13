@@ -79,42 +79,41 @@ function goToPreviousPage() {
   }, 500); // 0.5초 후에 이전 페이지로 이동
 }
 
-// 오디오 파일 목록
-const audioFiles = [
-  './오디오/공포.mp3',
-  './오디오/영혼.mp3',
-  './오디오/으스스.mp3',
-  './오디오/비명.mp3'
-];
+const audioFile1 = ['../오디오/공포.mp3', '../오디오/영혼.mp3', '../오디오/으스스.mp3'];
+const audioFile2 = ['../오디오/비명.mp3'];
+let playedAudioIndex1 = -1;
+let playedAudioIndex2 = -1;
 
-let playedAudioIndex = -1;
-
-// 랜덤 오디오 재생 함수
-function playRandomAudio() {
-  // 이전에 재생된 오디오와 다른 오디오를 선택
+function playRandomAudio1() {
   let randomIndex;
   do {
-    randomIndex = Math.floor(Math.random() * audioFiles.length);
-  } while (randomIndex === playedAudioIndex);
+    randomIndex = Math.floor(Math.random() * audioFile1.length);
+  } while (randomIndex === playedAudioIndex1);
 
-  const randomAudioFile = audioFiles[randomIndex];
-  playedAudioIndex = randomIndex;
+  const randomAudioFile = audioFile1[randomIndex];
+  playedAudioIndex1 = randomIndex;
 
   const audio = new Audio(randomAudioFile);
   audio.volume = 0.5;
-
-  audio.addEventListener('canplaythrough', function() {
-    audio.play();
-  });
-
-  audio.addEventListener('ended', function() {
-    // 오디오 재생이 끝나면 아무 작업도 하지 않음
-  });
-
   audio.play();
 }
 
-setInterval(playRandomAudio, 10000);
+function playRandomAudio2() {
+  let randomIndex;
+  do {
+    randomIndex = Math.floor(Math.random() * audioFile2.length);
+  } while (randomIndex === playedAudioIndex2);
+
+  const randomAudioFile = audioFile2[randomIndex];
+  playedAudioIndex2 = randomIndex;
+
+  const audio = new Audio(randomAudioFile);
+  audio.volume = 0.5;
+  audio.play();
+}
+
+setInterval(playRandomAudio1, 10000);
+setInterval(playRandomAudio2, 30000);
 
 
 function initAudio() {
