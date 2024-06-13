@@ -112,7 +112,7 @@ function playRandomAudio2() {
 }
 
 setInterval(playRandomAudio1, 10000);
-setInterval(playRandomAudio2, 20000);
+setInterval(playRandomAudio2, 30000);
 
 
 function initAudio() {
