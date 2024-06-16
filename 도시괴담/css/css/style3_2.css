@@ -1,4 +1,4 @@
-body, html {
+﻿body, html {
     margin: 0;
     padding: 0;
     width: 100%;
@@ -20,7 +20,7 @@ body, html {
     position: absolute;
     top: 51.7%;
     left: 35%;
-    background-image: url('창너머 손.png');
+    background-image: url('창 너머 하얀 손.png');
     background-size: cover;
     background-repeat: no-repeat;
     transform: translate(-50%, -50%);
