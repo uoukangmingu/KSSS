@@ -78,41 +78,46 @@ function goToPreviousPage() {
     window.history.back();
   }, 500); // 0.5초 후에 이전 페이지로 이동
 }
-const audioFile1 = ['../오디오/공포.mp3', '../오디오/영혼.mp3', '../오디오/으스스.mp3'];
-const audioFile2 = ['../오디오/비명.mp3'];
-let playedAudioIndex1 = -1;
-let playedAudioIndex2 = -1;
+const audioFiles = [
+  '../오디오/공포.mp3',
+  '../오디오/영혼.mp3',
+  '../오디오/으스스.mp3',
+  '../오디오/비명.mp3'
+];
 
-function playRandomAudio1() {
+let playedAudioIndex = -1;
+let audioPlayer;
+
+function playRandomAudio() {
+  if (audioPlayer) {
+    audioPlayer.pause();
+    audioPlayer = null;
+  }
+
   let randomIndex;
   do {
-    randomIndex = Math.floor(Math.random() * audioFile1.length);
-  } while (randomIndex === playedAudioIndex1);
+    randomIndex = Math.floor(Math.random() * audioFiles.length);
+  } while (randomIndex === playedAudioIndex);
 
-  const randomAudioFile = audioFile1[randomIndex];
-  playedAudioIndex1 = randomIndex;
+  const randomAudioFile = audioFiles[randomIndex];
+  playedAudioIndex = randomIndex;
 
-  const audio = new Audio(randomAudioFile);
-  audio.volume = 0.5;
-  audio.play();
+  audioPlayer = new Audio(randomAudioFile);
+  audioPlayer.volume = 0.5;
+  audioPlayer.addEventListener('ended', () => {
+    audioPlayer = null;
+    const randomDelay = Math.floor(Math.random() * 11) + 5; // 5~15초 사이의 랜덤한 시간
+    setTimeout(playRandomAudio, randomDelay * 1000);
+  });
+  audioPlayer.play().catch(err => {
+    console.error('오디오 재생 에러:', err);
+    const randomDelay = Math.floor(Math.random() * 11) + 5; // 5~15초 사이의 랜덤한 시간
+    setTimeout(playRandomAudio, randomDelay * 1000);
+  });
 }
 
-function playRandomAudio2() {
-  let randomIndex;
-  do {
-    randomIndex = Math.floor(Math.random() * audioFile2.length);
-  } while (randomIndex === playedAudioIndex2);
+playRandomAudio();
 
-  const randomAudioFile = audioFile2[randomIndex];
-  playedAudioIndex2 = randomIndex;
-
-  const audio = new Audio(randomAudioFile);
-  audio.volume = 0.5;
-  audio.play();
-}
-
-setInterval(playRandomAudio1, 10000);
-setInterval(playRandomAudio2, 30000);
 
 
 function initAudio() {
