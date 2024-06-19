@@ -29,11 +29,11 @@
 .first-button {
     display: block;
     position: absolute;
-    top: 44.05%;
-    left: 34.95%;
+    top: 44.8%;
+    left: 35.15%;
     transform: translate(-50%, -50%);
-    width: 9%;
-    height: 17.5%;
+    width: 9.5%;
+    height: 19%;
     background: rgba(255, 255, 255,0);
     cursor: pointer;
     border: 2px solid transparent;
@@ -43,11 +43,11 @@
 .second-button {
     display: block;
     position: absolute;
-    top: 62.2%;
-    left: 33.5%;
+    top: 63.1%;
+    left: 33.85%;
     transform: translate(-50%, -50%);
-    width: 9%;
-    height: 17.5%;
+    width: 9.8%;
+    height: 19.6%;
     background: rgba(255, 255, 255,0);
     cursor: pointer;
     border: 2px solid transparent;
@@ -57,11 +57,11 @@
 .third-button {
     display: block;
     position: absolute;
-    top: 47.13%;
-    left: 54.15%;
+    top: 48%;
+    left: 54.3%;
     transform: translate(-50%, -50%);
-    width: 6.6%;
-    height: 15.8%;
+    width: 6.4%;
+    height: 16.5%;
     background: rgba(255, 0, 0, 0);
     cursor: pointer;
     border: 2px solid transparent;
@@ -70,11 +70,11 @@
 .fourth-button {
     display: block;
     position: absolute;
-    top: 47.3%;
-    left: 64.4%;
+    top: 47.7%;
+    left: 64.55%;
     transform: translate(-50%, -50%);
-    width: 6.6%;
-    height: 15.8%;
+    width: 6.7%;
+    height: 16.5%;
     background: rgba(255, 255, 255, 0);
     cursor: pointer;
     border: 2px solid transparent;
@@ -109,25 +109,25 @@
 }
 .first-button:hover {
     background-image: url('../이미지/좌상.png');
-    background-size: cover;
+    background-size: contain;
     background-repeat: no-repeat;
 }
 
 .second-button:hover {
     background-image: url('../이미지/좌하.png');
-    background-size: cover;
+    background-size: contain;
     background-repeat: no-repeat;
 }
 
 .third-button:hover {
     background-image: url('../이미지/상중.png');
-    background-size: cover;
+    background-size: contain;
     background-repeat: no-repeat;
 }
 
 .fourth-button:hover {
     background-image: url('../이미지/상우.png');
-    background-size: cover;
+    background-size: contain;
     background-repeat: no-repeat;
 
 }
