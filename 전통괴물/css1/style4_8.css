@@ -21,6 +21,7 @@
     overflow-y: auto;
     white-space: normal;
     animation: type 1s steps(10000, end);
+    padding-right: 10px;
 }
 
 @keyframes type {
