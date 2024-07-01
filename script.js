@@ -1,311 +1,206 @@
-const seatContainer = document.querySelector('.seat-container');
-const confirmBtn = document.getElementById('confirmBtn');
-const cancelContainer = document.getElementById('cancelContainer');
-const cancelBtn = document.getElementById('cancelBtn');
-const cancelAllBtn = document.getElementById('cancelAllBtn');
-cancelAllBtn.addEventListener('click', cancelAllSeats);
-const confirmMessage = document.getElementById('confirmMessage');
-const seats = [];
-let selectedSeats = [];
-let cancelTargets = [];
-let isCancelContainerVisible = false;
-let discountedSeats = [];
-let discountedSeatsMap = {};
-let prohibitedSeats = [];
+const canvas = document.getElementById('glowCanvas');
+const ctx = canvas.getContext('2d');
 
-function createSeats() {
-    for (let i = 1; i <= 14 * 11; i++) {
-        const seat = document.createElement('div');
-        seat.classList.add('seat');
-        const row = Math.ceil(i / 11);
-        const col = i % 11 || 11;
-        seat.textContent = `${row}-${col}`;
-        seat.addEventListener('click', toggleSeatSelection);
-        seatContainer.appendChild(seat);
-        seats.push(seat);
-    }
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+function drawGlow() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+  const maxRadius = Math.sqrt(canvas.width ** 2 + canvas.height ** 2) / 2;
+
+  const radius = maxRadius * (0.6 + 0.4 * Math.random());
+const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+gradient.addColorStop(0, 'rgba(7, 0, 108, 0.05)'); // 더 연한 파란색
+gradient.addColorStop(0.5, 'rgba(7, 0, 108, 0.02)'); // 더 연한 파란색
+gradient.addColorStop(1, 'rgba(7, 0, 108, 0)');
+
+
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-
-window.addEventListener('load', () => {
-    const confirmedSeats = JSON.parse(localStorage.getItem('confirmedSeats')) || [];
-    const storedDiscountedSeatsMap = JSON.parse(localStorage.getItem('discountedSeatsMap')) || {};
-    discountedSeatsMap = storedDiscountedSeatsMap;
-
-    confirmedSeats.forEach(seatIndex => {
-        const seat = seats[seatIndex];
-        const seatRow = Math.ceil((seatIndex + 1) / 11);
-        const seatCol = (seatIndex + 1) % 11 || 11;
-        seat.textContent = `${seatRow}-${seatCol}`; // 좌석 번호 표시 업데이트
-        seat.classList.add('confirmed');
-        if (storedDiscountedSeatsMap[seatIndex]) {
-            seat.classList.add('discounted');
-        }
-    });
-    toggleCancelContainer();
-    updateSeatInfo();
-});
-
-
-function toggleSeatSelection() {
-    if (this.classList.contains('confirmed')) return;
-
-    if (event.ctrlKey) {
-        // Ctrl 키를 누른 상태에서 클릭한 경우
-        if (this.classList.contains('prohibited')) {
-            // 금지 좌석인 경우, 금지를 해제
-            this.classList.remove('prohibited');
-            prohibitedSeats = prohibitedSeats.filter(seat => seat !== this);
-        } else {
-            // 일반 좌석인 경우, 금지 좌석으로 설정
-            this.classList.add('prohibited');
-            prohibitedSeats.push(this);
-        }
-    } else {
-        // 일반적인 좌석 선택/해제 로직
-        this.classList.toggle('selected');
-        const index = selectedSeats.indexOf(this);
-        if (index === -1) {
-            selectedSeats.push(this);
-        } else {
-            selectedSeats.splice(index, 1);
-        }
-    }
+function animate() {
+  drawGlow();
+  requestAnimationFrame(animate);
 }
 
-
-async function confirmSelectedSeats() {
-    const confirmedSeatIndices = [];
-    const discountPrompt = document.getElementById('discountPrompt');
-
-    for (const seat of selectedSeats) {
-        if (seat.classList.contains('prohibited')) continue;
-        const seatIndex = seats.indexOf(seat);
-        const seatRow = Math.ceil((seatIndex + 1) / 11);
-        const seatCol = (seatIndex + 1) % 11 || 11;
-        discountPrompt.innerHTML = `
-            <div>${seatRow}-${seatCol}번 좌석에 할인권을 사용하시겠습니까?</div>
-            <div class="buttons">
-                <button class="confirm-btn" disabled>
-                    <div class="cooldown-bar"></div>
-                    사용
-                </button>
-                <button class="cancel-btn" disabled>
-                    <div class="cooldown-bar"></div>
-                    미사용
-                </button>
-            </div>
-        `;
-        discountPrompt.classList.add('show');
-
-        const useDiscount = new Promise(resolve => {
-            let cooldownTimeout;
-
-            const confirmBtn = discountPrompt.querySelector('.confirm-btn');
-            const cancelBtn = discountPrompt.querySelector('.cancel-btn');
-
-            const handleConfirm = () => {
-                clearTimeout(cooldownTimeout);
-                confirmBtn.disabled = false;
-                cancelBtn.disabled = false;
-                resolve(true);
-            };
-
-            const handleCancel = () => {
-                clearTimeout(cooldownTimeout);
-                confirmBtn.disabled = false;
-                cancelBtn.disabled = false;
-                resolve(false);
-            };
-
-            const startCooldown = () => {
-                confirmBtn.disabled = true;
-                cancelBtn.disabled = true;
-                const cooldownBars = discountPrompt.querySelectorAll('.cooldown-bar');
-                cooldownBars.forEach(bar => {
-                    bar.style.width = '100%';
-                    bar.style.animation = 'cooldown 0.9s linear forwards';
-                });
-            };
-
-            confirmBtn.addEventListener('click', handleConfirm);
-            cancelBtn.addEventListener('click', handleCancel);
-            startCooldown();
-            cooldownTimeout = setTimeout(() => {
-                confirmBtn.disabled = false;
-                cancelBtn.disabled = false;
-                confirmBtn.querySelector('.cooldown-bar').style.animation = '';
-                cancelBtn.querySelector('.cooldown-bar').style.animation = '';
-            }, 900);
-        });
-
-        const useDiscountResult = await useDiscount;
-        discountPrompt.classList.remove('show');
-        discountPrompt.innerHTML = '';
-
-        confirmedSeatIndices.push(seatIndex);
-
-        if (useDiscountResult) {
-            discountedSeatsMap[seatIndex] = true;
-        }
-    }
-
-    const existingConfirmedSeats = JSON.parse(localStorage.getItem('confirmedSeats')) || [];
-    const updatedConfirmedSeats = [...existingConfirmedSeats, ...confirmedSeatIndices];
-
-    localStorage.setItem('confirmedSeats', JSON.stringify(updatedConfirmedSeats));
-    localStorage.setItem('discountedSeatsMap', JSON.stringify(discountedSeatsMap));
-
-    selectedSeats.forEach(seat => {
-        const seatIndex = seats.indexOf(seat);
-        seat.classList.add('confirmed');
-        if (discountedSeatsMap[seatIndex]) {
-            seat.classList.add('discounted');
-        }
-        seat.classList.remove('selected');
-    });
-
-    selectedSeats = [];
-    showConfirmMessage('선택한 좌석이 확정되었습니다.');
-    updateSeatInfo();
-}
+animate();
 
 
 
-function toggleCancelContainer() {
-    isCancelContainerVisible = !isCancelContainerVisible;
-    cancelContainer.style.display = isCancelContainerVisible ? 'flex' : 'none';
-    cancelBtn.disabled = !isCancelContainerVisible;
 
-    if (isCancelContainerVisible) {
-        seats.forEach(seat => {
-            seat.addEventListener('click', toggleCancelTarget);
-        });
-        cancelBtn.addEventListener('click', cancelSelectedSeats);
-        cancelAllBtn.addEventListener('click', cancelAllSeats); // 추가된 코드
-    } else {
-        seats.forEach(seat => {
-            seat.removeEventListener('click', toggleCancelTarget);
-        });
-        cancelBtn.removeEventListener('click', cancelSelectedSeats);
-        cancelAllBtn.removeEventListener('click', cancelAllSeats); // 추가된 코드
-    }
-}
-
-function cancelAllSeats() {
-    const confirmedSeats = JSON.parse(localStorage.getItem('confirmedSeats')) || [];
-    const discountedSeatsMap = JSON.parse(localStorage.getItem('discountedSeatsMap')) || {};
-
-    // 확정된 좌석 및 할인권 사용 좌석 모두 취소
-    confirmedSeats.forEach(index => {
-        const seat = seats[index];
-        seat.classList.remove('confirmed', 'cancel-target', 'discounted');
-        delete discountedSeatsMap[index];
-    });
-
-    localStorage.setItem('confirmedSeats', '[]');
-    localStorage.setItem('discountedSeatsMap', '{}');
-
-    selectedSeats = [];
-    cancelTargets = [];
-    showConfirmMessage('모든 좌석이 취소되었습니다.');
-    updateSeatInfo();
-}
-
-
-function toggleCancelTarget() {
-    if (this.classList.contains('confirmed') || this.classList.contains('discounted')) {
-        if (this.classList.contains('cancel-target')) {
-            this.classList.remove('cancel-target');
-            cancelTargets = cancelTargets.filter(seat => seat !== this);
-        } else {
-            this.classList.add('cancel-target');
-            cancelTargets.push(this);
-        }
-    }
-}
-
-
-function cancelSelectedSeats() {
-    const cancelledSeatIndices = cancelTargets.map(seat => seats.indexOf(seat));
-    const confirmedSeats = JSON.parse(localStorage.getItem('confirmedSeats')) || [];
-    const updatedConfirmedSeats = confirmedSeats.filter(index => !cancelledSeatIndices.includes(index));
-    localStorage.setItem('confirmedSeats', JSON.stringify(updatedConfirmedSeats));
-
-    // 할인권 사용 정보 제거
-    cancelledSeatIndices.forEach(index => {
-        delete discountedSeatsMap[index];
-    });
-    localStorage.setItem('discountedSeatsMap', JSON.stringify(discountedSeatsMap));
-
-    cancelTargets.forEach(seat => {
-        seat.classList.remove('confirmed', 'cancel-target', 'discounted');
-    });
-    cancelTargets = [];
-    showConfirmMessage('선택한 좌석이 취소되었습니다.');
-    updateSeatInfo();
-}
-
-
-function showConfirmMessage(message) {
-    confirmMessage.textContent = message;
-    confirmMessage.classList.add('show');
-    setTimeout(() => {
-        confirmMessage.classList.remove('show');
-    }, 3000);
-}
-
-document.addEventListener('keydown', function(event) {
-    if (event.ctrlKey && event.key === 'b') {
-        toggleCancelContainer();
-    }
-});
-
-createSeats();
-
-confirmBtn.addEventListener('click', confirmSelectedSeats);
-
-function updateSeatInfo() {
-    const remainingSeats = seats.filter(seat => !seat.classList.contains('confirmed') && !seat.classList.contains('prohibited')).length;
-    const totalSeats = seats.length - prohibitedSeats.length;
-    const totalAudience = totalSeats - remainingSeats;
-    const discountedSeatsCount = seats.filter(seat => seat.classList.contains('discounted')).length;
-
-    document.getElementById('remainingSeats').textContent = remainingSeats;
-    document.getElementById('totalSeats').textContent = totalSeats;
-    document.getElementById('totalAudience').textContent = totalAudience;
-    document.getElementById('discountedSeatsCount').textContent = `(할인권 사용: ${discountedSeatsCount}석)`;
-}
-
-const stage = document.querySelector('.stage');
-
-stage.addEventListener('click', () => {
-    prohibitedSeats.forEach(seat => {
-        seat.classList.remove('prohibited');
-    });
-    prohibitedSeats = [];
-});
-
-
-const zoomInBtn = document.getElementById('zoomInBtn');
-const zoomOutBtn = document.getElementById('zoomOutBtn');
 const container = document.querySelector('.container');
 
-let currentZoom = 1;
-const maxZoom = 2;
-const minZoom = 0.5;
-const zoomStep = 0.1;
+function flickerAnimation() {
+  container.style.opacity = Math.random() * 0.4 + 0.8; // 0.8 ~ 1.2 범위
+  requestAnimationFrame(flickerAnimation);
+}
 
-zoomInBtn.addEventListener('click', () => {
-  if (currentZoom < maxZoom) {
-    currentZoom += zoomStep;
-    container.style.transform = `scale(${currentZoom})`;
+flickerAnimation();
+
+function triggerRandomAnimation() {
+  const container = document.querySelector('.container');
+  container.classList.add('shake');
+  setTimeout(() => {
+    container.classList.remove('shake');
+  }, 400);
+}
+
+function applyRandomAnimation() {
+  triggerRandomAnimation();
+  setTimeout(applyRandomAnimation, Math.random() * 10000 + 5000);
+}
+
+applyRandomAnimation();
+
+function adjustContainerHeight() {
+  const desiredAspectRatio = 16 / 9;
+  const newWidth = window.innerWidth;
+  const newHeight = newWidth / desiredAspectRatio;
+  document.querySelector('.container').style.height = `${newHeight}px`;
+}
+
+window.addEventListener('load', adjustContainerHeight);
+window.addEventListener('resize', adjustContainerHeight);
+
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    showInitialScreenMessage();
   }
 });
 
-zoomOutBtn.addEventListener('click', () => {
-  if (currentZoom > minZoom) {
-    currentZoom -= zoomStep;
-    container.style.transform = `scale(${currentZoom})`;
+function showInitialScreenMessage() {
+  const messageContainer = document.createElement('div');
+  messageContainer.style.position = 'fixed';
+  messageContainer.style.top = '50%';
+  messageContainer.style.left = '50%';
+  messageContainer.style.transform = 'translate(-50%, -50%)';
+  messageContainer.style.fontSize = '5rem';
+  messageContainer.style.color = 'red';
+  messageContainer.style.textShadow = '0 0 20px black';
+  messageContainer.style.zIndex = '9999';
+  messageContainer.textContent = '최초 화면입니다';
+
+  // 무서운 효과 추가
+  messageContainer.style.animation = 'initialScreenAnimation 2s infinite';
+
+  document.body.appendChild(messageContainer);
+
+  setTimeout(function() {
+    document.body.removeChild(messageContainer);
+  }, 2000); // 5초 후에 메시지 제거
+}
+function getRandomPosition() {
+  const x = Math.random() * (window.innerWidth - 200);
+  const y = Math.random() * (window.innerHeight - 200);
+  return { x, y };
+}
+
+function getRandomSize() {
+  const width = Math.random() * 300 + 100; // 100px ~ 400px
+  const height = width * 1.25; // 가로세로비 4:3
+  return { width, height };
+}
+
+function showHandEffect() {
+  const handContainer = document.getElementById('hand-container');
+  const handImage = document.getElementById('hand-image');
+
+  const { x, y } = getRandomPosition();
+  const { width, height } = getRandomSize();
+
+  handContainer.style.display = 'block';
+  handContainer.style.opacity = '1'; // 불투명 상태로 시작
+  handContainer.style.left = `${x}px`; 
+  handContainer.style.top = `${y}px`;
+  handImage.style.width = `${width}px`;
+  handImage.style.height = `${height}px`;
+
+  setTimeout(function() {
+    handContainer.style.opacity = '0'; // 서서히 사라짐
+    setTimeout(function() {
+      handContainer.style.display = 'none';
+const randomDelay = Math.random() * 2000 + 8000; // 8초 ~ 10초 사이 랜덤
+      setTimeout(function() {
+        showHandEffect();
+      }, randomDelay);
+    }, 1000);
+  }, 2000);
+}
+
+ setTimeout(function() {
+  showHandEffect();
+}, 1000);
+const audioFiles = [
+  './오디오/공포.mp3',
+  './오디오/영혼.mp3',
+  './오디오/으스스.mp3',
+  './오디오/비명.mp3',
+  './오디오/종.mp3',
+  './오디오/쿵.mp3',
+  './오디오/분위기.mp3',
+  './오디오/여자비명.mp3',
+  './오디오/지옥.mp3'
+];
+
+let playedAudioIndex = -1;
+let audioPlayer;
+
+function playRandomAudio() {
+  if (audioPlayer) {
+    audioPlayer.pause();
+    audioPlayer = null;
   }
-});
+
+  let randomIndex;
+  do {
+    randomIndex = Math.floor(Math.random() * audioFiles.length);
+  } while (randomIndex === playedAudioIndex);
+
+  const randomAudioFile = audioFiles[randomIndex];
+  playedAudioIndex = randomIndex;
+
+  audioPlayer = new Audio(randomAudioFile);
+  audioPlayer.volume = 0.5;
+  audioPlayer.addEventListener('ended', () => {
+    audioPlayer = null;
+    const randomDelay = Math.floor(Math.random() * 11) + 5; // 5~15초 사이의 랜덤한 시간
+    setTimeout(playRandomAudio, randomDelay * 1000);
+  });
+  audioPlayer.play().catch(err => {
+    console.error('오디오 재생 에러:', err);
+    const randomDelay = Math.floor(Math.random() * 11) + 5; // 5~15초 사이의 랜덤한 시간
+    setTimeout(playRandomAudio, randomDelay * 1000);
+  });
+}
+
+playRandomAudio();
+
+
+
+function initAudio() {
+  audio = new Audio('./오디오/tv소리.mp3');
+  audio.volume = 0.5;
+  audio.loop = true;
+  audio.addEventListener('canplaythrough', playAudio);
+}
+
+function playAudio() {
+  audio.play()
+    .catch(err => {
+      // 자동재생이 차단된 경우 처리
+      console.log('재생 차단:', err);
+    });
+}
+
+document.addEventListener('click', function() {
+  // 사용자 상호작용 이후에 오디오 재생 시도
+  if (audio && audio.paused) {
+    audio.play();
+  }
+}, { once: true });
+
+initAudio();
