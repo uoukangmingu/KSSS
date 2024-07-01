@@ -1,26 +1,60 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>크스스스</title>
+    <title>좌석 선택</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <canvas id="glowCanvas"></canvas>
-        <a href="웹디자인_3.html" class="first-button"></a>
-        <a href="./도시괴담/웹디자인_2.html" class="second-button"></a>
-        <a href="./공포스팟/웹디자인_h.html" class="third-button"></a>
-        <a href="./커뮤니티/커뮤니티.html" class="fourth-button"></a>
-        <a href="index.html" class="homebtn"><img src="homebtn.png" alt="홈 버튼" class="homeBtn"></a>
+<div class="container">
+<div class="legend">
+    <h3>좌석 상태</h3>
+    <div class="legend-item">
+        <div class="seat available"></div>
+        <span>예약 가능</span>
     </div>
-
-<div id="hand-container">
-  <img id="hand-image" src="hand.png" alt="Hand Image">
+    <div class="legend-item">
+        <div class="seat confirmed"></div>
+        <span>확정됨</span>
+    </div>
+    <div class="legend-item">
+        <div class="seat discounted"></div>
+        <span>할인권 사용</span>
+    </div>
+    <div class="legend-item">
+        <div class="seat selected"></div>
+        <span>선택됨</span>
+    </div>
+    <div class="legend-item">
+        <div class="seat cancel-target"></div>
+        <span>취소 대상</span>
+    </div>
 </div>
 
-
-    <script src="script.js"></script>
+<div class="audience-count">
+    <span>관객수:</span> <span id="totalAudience"></span>명
+    <span id="discountedSeatsCount"></span>
+</div>
+<div class="seat-info">
+    남은 좌석 <span id="remainingSeats"></span> / <span id="totalSeats"></span>
+</div>
+<div class="stage">무대</div>
+<div class="seat-container"></div>
+<div class="button-container">
+    <button id="confirmBtn">확정</button>
+    <div id="cancelContainer" style="display: none;">
+        <button id="cancelBtn">취소</button>
+        <button id="cancelAllBtn">전체 취소</button>
+    </div>
+</div>
+<div class="zoom-controls">
+    <button id="zoomOutBtn">-</button>
+    <button id="zoomInBtn">+</button>
+</div>
+<div id="confirmMessage"></div>
+</div>
+<div id="discountPrompt" class="prompt"></div>
+<script src="script.js"></script>
 </body>
 </html>
